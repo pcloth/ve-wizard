@@ -3,22 +3,20 @@
 [![npm](https://img.shields.io/npm/v/ve-wizard.svg) ![npm](https://img.shields.io/npm/dm/ve-wizard.svg)](https://www.npmjs.com/package/ve-wizard)
 [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
 
-这是一个便于使用的帮助向导组件
+This is an easy-to-use help wizard component
 
-## [English document by machine translation](./README.EN.MD)
-
-# 例子
+# example
 
 ![demo](/images/demo.gif)
 
 
-# 安装方法
+# installation
 
 ```
 npm install --save ve-wizard
 ```
 
-## 全局导入
+## Global import
 ```javascript
 import Vue from 'vue'
 import veWizard from 've-wizard'
@@ -26,44 +24,44 @@ import veWizard from 've-wizard'
 Vue.use(veWizard)
 ```
 
-## 页面引入
+## Page introduction
 ``` html
 <ve-wizard v-model="showHelp" :options="options"></ve-wizard>
 ```
 
 
-## props参数
-| 参数名 | 类型 | 默认值 | 说明 |
+## props
+| name | type | default value | description |
 |---|---|---| --- |
-| value | boolean | false | 是否显示向导窗体 |
-| options | object | 见下表 | 配置向导参数 |
+| value | boolean | false | Whether to display the wizard dialog |
+| options | object | See next Table | Configuration Wizard Parameters |
 
 
-## options 配置表
-| 参数名 | 类型 | 默认值 | 说明 |
+## options configuration table
+| name | type | default value | description |
 |---|---|---| --- |
-| position | string | right | 默认按钮位置，left/right |
-| background | string | #830000 | 默认按钮背景颜色 |
-| helpTags | string | 点击获取本页操作帮助 | 默认按钮的title提示 |
-| hackDialogClassName | string | el-dialog | 当需要对模态框区域聚焦帮助向导的时候，有些ui框架的模态框会造成识别偏移值位置错误，需要指定ui的模态框父节点的className，默认是element-ui的模态框 |
-| disabled | boolean | true | 聚焦后的操作区域禁止操作，如果允许操作，某些ui上可能显示错位 |
-| helpData | array | [] | 帮助向导的内容数据，见下表 |
+| position | string | right | Default button position： left/right |
+| background | string | #830000 | default button background color |
+| helpTags | string | 点击获取本页操作帮助 | Default Button Title Tip |
+| hackDialogClassName | string | el-dialog | When the modal box area needs to be focused on the help wizard, some modal boxes of the UI framework will cause the location of the recognition offset value to be wrong. You need to specify the class of the modal box parent element-ui. Name, the default is the modal box of the element-ui |
+| disabled | boolean | true | The operation area after the focus is forbidden. If it is allowed to operate, some ui may show misplaced |
+| helpData | array | [] | Help Wizard content data, see next table |
 
-## options.helpData 配置说明
-| 参数名 | 类型 | 默认值 | 说明 |
+## options.helpData
+| name | type | default value | description |
 |---|---|---| --- |
-| title | string | 无 | 当前向导步骤的标题 |
-| context | string | 无 | 当前向导步骤的内容，支持html字符串。 |
-| ref | string | 无 | 当前向导步骤需要聚焦的div所配置的ref名称。 |
+| title | string | 无 | Title of current wizard step |
+| context | string | 无 | The content of the current wizard step supports html strings. |
+| ref | string | 无 | current wizard step div which requires focus all references to the configuration. |
 
-## slot 插槽
-| 插槽名称 | slot-scope参数 | 说明 |
+## slot
+|Slot Name | slot-scope Parameters | Description |
 |---|---|---|
-| help-context | text | 当前向导步骤的内容区域插槽 |
-| help-button | 无 | 帮助按钮插槽，当需要完全自定义样式的时候使用。 |
+| help-context | text | Content Area Slots for Current Wizard Steps |
+| help-button | none | Help Button Slot, used when full custom style is required. |
 
 
-## 完整的demo代码
+## full demo code
 ```html
 <template>
     <div>

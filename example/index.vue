@@ -1,11 +1,18 @@
 <template>
     <div>
         <div>帮助向导</div>
-        <div ref="s1" class="button">操作按钮1</div>
-        <div ref="s2" class="button" style="left: 300px;">操作按钮2</div>
-        <div ref="s3" class="button" style="float:right;">操作按钮3</div>
-        <div ref="s4" class="button" style="bottom:0;position: fixed;">操作按钮4</div>
-        <ve-wizard :options="options"></ve-wizard>
+        <div ref="s1" class="button">div 1</div>
+        <div ref="s2" class="button" style="left: 300px;">div 2</div>
+        <div ref="s3" class="button" style="float:right;">div 3</div>
+        <div ref="s4" class="button" style="bottom:0;position: fixed;">div 4</div>
+        <div class="button" style="bottom:0;right:80px;position: fixed;" @click="slot=!slot">
+            自定义样式：{{slot}}  ---->
+        </div>
+        <ve-wizard v-model="showHelp" :options="options">
+            <div slot="help-button" v-if="slot">
+                <i class="iconfont icon-help my"></i>
+            </div>
+        </ve-wizard>
     </div>
 </template>
 
@@ -16,6 +23,8 @@ export default {
     props:{},
     data(){
         return {
+            showHelp:false,
+            slot:false,
             options: {
                 // 帮助按钮停靠位置
                 position: "right",
@@ -76,5 +85,21 @@ export default {
     position: relative;
     height: 68px;
     width: 120px;
+    border: 1px solid rgba(1,1,1,0.2);
+    
+}
+
+.my {
+    font-size: 36px;
+    cursor: pointer;
+    text-shadow: black 0.1em 0.1em 0.2em;
+    position: fixed;
+    right: 10px;
+    bottom: 30px;
+    color:#830000;
+}
+.my:hover {
+    font-size: 40px;
+    font-weight: 600;
 }
 </style>

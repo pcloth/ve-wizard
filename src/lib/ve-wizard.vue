@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="outer-layer" :class="currentOptions.disabled==true?'disabled':'editor'" v-if="currentValue">
+        <div class="outer-layer" :class="currentOptions.disabled==true?'disabled':'editor'"  v-show="currentValue===true">
             <!-- 这个是聚光灯焦点框 :style="'left:'+offsetLeft+'px;top:'+offsetTop+'px;width:'+offsetWidth+'px;height:'+offsetHeight+'px;'"-->
             <div class="spotlight" :class="currentOptions.disabled==true?'disabled':'editor'" :style="'left:'+offsetLeft+'px;top:'+offsetTop+'px;width:'+offsetWidth+'px;height:'+offsetHeight+'px;'">
             </div>
@@ -13,8 +13,14 @@
                     {{currentSubTitle}}
                     <span style="float: right;margin-right: 2rem;color: rgba(0,0,0,0.4);font-size: 14px;">{{currentModeName}}</span>
                 </div>
-                <div class="info-close" @click="currentValue=false">x</div>
-                <div class="info-context" v-html="currentContext"></div>
+                <div class="info-close" @click="currentValue=false" title="关闭向导">
+                    <i class="iconfont icon-close"></i>
+                </div>
+                <div class="info-context" >
+                    <slot name="help-context" :text="currentContext">
+                        <div v-html="currentContext"></div>
+                    </slot>
+                </div>
                 <div class="info-footer">
                     <button :disabled="lastIndex<=0" @click="GoToNext(-1)">上一步</button>
                     <button @click="currentValue=false">关闭</button>
@@ -24,25 +30,33 @@
         </div>
 
         <!-- 帮助精灵按钮 -->
-        <div class="helper" 
-        :title="currentOptions.helpTags" 
-        :class="currentOptions.position" :style="
-            'top:'+currentOptions.top+';'+
-            'left:'+currentOptions.left+';'+
-            'right:'+currentOptions.right+';'+
-            'bottom:'+currentOptions.bottom+';'+
-            'background:'+currentOptions.background+';'
-            " @click="currentValue=true" v-else>
-            <span :style="'line-height: '+question_mark_height+';color: #fff;margin: 5px;'">?</span>
+        <div @click="currentValue=true" :title="currentOptions.helpTags" v-show="currentValue===false">
+            <slot name="help-button"  >
+                <div class="helper" 
+                :title="currentOptions.helpTags" 
+                :class="currentOptions.position" :style="
+                    'top:'+currentOptions.top+';'+
+                    'left:'+currentOptions.left+';'+
+                    'right:'+currentOptions.right+';'+
+                    'bottom:'+currentOptions.bottom+';'+
+                    'background:'+currentOptions.background+';'
+                    " @click="currentValue=true"  >
+                        <span :style="'line-height: '+question_mark_height+';color: #fff;margin: 5px;'">
+                            <!-- <i class="iconfont icon-help"></i> -->
+                            ?
+                        </span>
+                </div>
+            </slot>
         </div>
+        
 
     </div>
 </template>
 
 <script>
 export default {
-    name:'ve-wizard',
-    
+    name: "ve-wizard",
+
     props: {
         // 传入参数
         options: {
@@ -59,7 +73,7 @@ export default {
     },
     data() {
         return {
-            thisChildrenIsWizard:true,
+            thisChildrenIsWizard: true,
             currentValue: this.value,
             currentOptions: {},
             defaultOptions: {
@@ -136,6 +150,9 @@ export default {
                 this.changeLastFocusStyle();
             }
         },
+        value(){
+            this.currentValue = this.value
+        },
         options() {
             this.initOptions(this.options);
         }
@@ -204,21 +221,19 @@ export default {
         },
         // 显示当前帮助步骤
         showStep(sid) {
-            
-            function findParent(node){
+            function findParent(node) {
                 // 查找父组件（有些ui会被包装两层）
-                if(node.$parent && node.$parent.$children){
-                    for(let i in node.$parent.$children){
-                        if(node.$parent.$children[i].thisChildrenIsWizard){
-                            return node.$parent
+                if (node.$parent && node.$parent.$children) {
+                    for (let i in node.$parent.$children) {
+                        if (node.$parent.$children[i].thisChildrenIsWizard) {
+                            return node.$parent;
                         }
                     }
-                    
                 }
-                return findParent(node.$parent)
+                return findParent(node.$parent);
             }
 
-            var parent = findParent(this)
+            var parent = findParent(this);
             var thisRef;
             var self = this;
             // 获取绝对left
@@ -268,14 +283,18 @@ export default {
             ) {
                 // 检查参数中是否有ref提示
                 if (typeof this.currentOptions.helpData[sid].ref !== "string") {
-                    this.currentContext = `帮助向导参数错误${this.currentOptions.helpData[sid]}的元素。`
+                    this.currentContext = `帮助向导参数错误${
+                        this.currentOptions.helpData[sid]
+                    }的元素。`;
                     return;
                 }
                 thisRef = parent.$refs[this.currentOptions.helpData[sid].ref];
 
-                if(!thisRef){
-                    this.currentContext = `没找到ref名字为${this.currentOptions.helpData[sid].ref}的元素。`
-                    return
+                if (!thisRef) {
+                    this.currentContext = `没找到ref名字为${
+                        this.currentOptions.helpData[sid].ref
+                    }的元素。`;
+                    return;
                 }
 
                 // 检查dom是否被vue包装还是原生dom
@@ -348,6 +367,8 @@ export default {
 </script>
 
 <style scoped>
+@import "./style.css";
+
 button {
     margin-left: 20px;
     height: 28px;
@@ -405,7 +426,6 @@ button {
     top: 5px;
     right: 10px;
     font-weight: 300;
-    font-family: Arial, sans-serif;
     cursor: pointer;
 }
 
@@ -484,9 +504,7 @@ button {
 .helper {
     position: fixed;
     z-index: 99999;
-    background: #830000;
     cursor: pointer;
-
     box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.3),
         0 0 40px rgba(0, 0, 0, 0.1) inset;
 }
